@@ -34,7 +34,7 @@ public class pidbrat extends OpMode{
 controller.setPID(p, i, d);
 int armPos =brat.getCurrentPosition();
 double pid = controller.calculate(armPos, target);
-double ff = Math.cos(Math.toRadians(target/ticks_in_degree)) *f;z
+double ff = Math.cos(Math.toRadians(target/ticks_in_degree)) *f;
 
 double power = pid +ff;
 brat.setPower(power);
