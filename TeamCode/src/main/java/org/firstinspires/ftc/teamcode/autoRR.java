@@ -72,6 +72,8 @@ public class autoRR extends LinearOpMode
 
 
 
+
+
     OpenCvWebcam webcam;
 
 
@@ -184,7 +186,7 @@ public class autoRR extends LinearOpMode
         findPropPL.enableDetection = false;
 
         // wait for user to press start on Driver Station
-        Pose2d startPose = new Pose2d(1.94, -62.33, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(11.79, -62.33, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
         TrajectoryVelocityConstraint slowConstraint = new MinVelocityConstraint(Arrays.asList(
 
@@ -203,7 +205,7 @@ public class autoRR extends LinearOpMode
                 .addTemporalMarker(() -> dreaptaIntake.setPosition(0.56)) // Lower servo
                 .addTemporalMarker(() -> stangaIntake.setPosition(0.44)) // Lower servo
                 .waitSeconds(1)
-                .lineTo(new Vector2d(11.94, -49.59))
+                .lineTo(new Vector2d(11.79, -59.83))
 
 
 
@@ -214,41 +216,14 @@ public class autoRR extends LinearOpMode
             switch (CS_1_Pipeline.location){
                 case LEFT:
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(trajSeq.end())
-                            /*.splineToConstantHeading(new Vector2d(25.12, 34.21), Math.toRadians(-90.00))
-                            .addTemporalMarker(() -> dreaptaIntake.setPosition(1)) // Lower servo
-                            .addTemporalMarker(() -> stangaIntake.setPosition(0)) // Lower servo
+                            .splineToSplineHeading(new Pose2d(3.74, -30.69, Math.toRadians(180.00)), Math.toRadians(90.25))
                             .waitSeconds(2)
-
-
-
-                            .lineTo(new Vector2d(25.12, 50.03))
-
-                            .addTemporalMarker(() -> servoBrat.setPosition(1))
-
-
-
-                            .addTemporalMarker(() -> ascending.setTargetPosition(1000))
-                            .addTemporalMarker(() -> ascending.setPower(1))
+                            .lineTo(new Vector2d(55.74, -30.98))
 
                             .waitSeconds(2)
-                            .splineToLinearHeading(new Pose2d(53.54, 44.17, Math.toRadians(185.00)), Math.toRadians(0.00))
-                            .addTemporalMarker(() -> brat.setTargetPosition(350))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+                            .splineToConstantHeading(new Vector2d(37.57, -58.96), Math.toRadians(0.00))
                             .waitSeconds(2)
-
-                            .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
-                            .addTemporalMarker(() -> stangaGripper.setPosition(0))
-                            .addTemporalMarker(() -> brat.setTargetPosition(400))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
-
-                            .splineToConstantHeading(new Vector2d(41.97, 59.11), Math.toRadians(0.00))
-                            .addTemporalMarker(() -> ascending.setTargetPosition(-10))
-                            .addTemporalMarker(() -> ascending.setPower(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
-                            .waitSeconds(2)
-                            .lineTo(new Vector2d(59.99, 61.75)) */
-
+                            .lineTo(new Vector2d(62.92, -58.82))
 
 
 
@@ -259,44 +234,17 @@ public class autoRR extends LinearOpMode
                     break;
                 case CENTER:
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(trajSeq.end())
-                            .splineToLinearHeading(new Pose2d(12.09, -26.73, Math.toRadians(90.00)), Math.toRadians(90.00))
-
-
-                            .addTemporalMarker(() -> dreaptaIntake.setPosition(1)) // Lower servo
-                            .addTemporalMarker(() -> stangaIntake.setPosition(0)) // Lower servo
+                            .lineTo(new Vector2d(11.79, -28.93))
                             .waitSeconds(2)
-
-
-
-                            .addTemporalMarker(() -> servoBrat.setPosition(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(350))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
-                            .addTemporalMarker(() -> ascending.setTargetPosition(1000))
-                            .addTemporalMarker(() -> ascending.setPower(1))
-
-                            .splineTo(new Vector2d(19.26, -47.98), Math.toRadians(0.00))
-                            .splineToConstantHeading(new Vector2d(55.15, -35.23), Math.toRadians(0.00))
-
-
-                            .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
-                            .addTemporalMarker(() -> stangaGripper.setPosition(0))
-                            .addTemporalMarker(() -> brat.setTargetPosition(400))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
-
-
-
-                            .lineToConstantHeading(new Vector2d(30.54, -55.30))
-
-
-
-
-                            .addTemporalMarker(() -> ascending.setTargetPosition(-10))
-                            .addTemporalMarker(() -> ascending.setPower(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+                            .lineTo(new Vector2d(11.65, -41.68))
                             .waitSeconds(2)
+                            .splineToLinearHeading(new Pose2d(57.06, -36.11, Math.toRadians(180.00)), Math.toRadians(0.00))
+                            .waitSeconds(2)
+                            .splineToConstantHeading(new Vector2d(35.67, -59.69), Math.toRadians(0.00))
+                            .waitSeconds(2)
+                            .lineTo(new Vector2d(58.08, -61.60))
 
-                            .splineTo(new Vector2d(60.72, -63.80), Math.toRadians(0.00))
+                            .waitSeconds(2)
 
 
 
@@ -319,32 +267,26 @@ public class autoRR extends LinearOpMode
                     break;
                 case RIGHT:
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(trajSeq.end())
-                           /* .splineToSplineHeading(new Pose2d(6, 30.54, Math.toRadians(180.00)), Math.toRadians(246.50))
-                            .addTemporalMarker(() -> dreaptaIntake.setPosition(1)) // Lower servo
-                            .addTemporalMarker(() -> stangaIntake.setPosition(0)) // Lower servo
-                            .waitSeconds(2)
-                            .addTemporalMarker(() -> servoBrat.setPosition(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(350))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
-                            .addTemporalMarker(() -> ascending.setTargetPosition(1000))
-                            .addTemporalMarker(() -> ascending.setPower(1))
+                            .splineToSplineHeading(new Pose2d(17.07, -31.13, Math.toRadians(0.00)), Math.toRadians(0.00))
+
                             .waitSeconds(2)
 
-                            .lineToConstantHeading(new Vector2d(55.74, 29.22))
+                            .splineToConstantHeading(new Vector2d(9.30, -35.23), Math.toRadians(241.67))
+                            .waitSeconds(2)
 
-                            .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
-                            .addTemporalMarker(() -> stangaGripper.setPosition(0))
-                            .addTemporalMarker(() -> brat.setTargetPosition(400))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+                            .splineToSplineHeading(new Pose2d(24.10, -47.98, Math.toRadians(180.00)), Math.toRadians(0.00))
+                            .waitSeconds(2)
+
+                            .splineToSplineHeading(new Pose2d(53.84, -42.56, Math.toRadians(180.00)), Math.toRadians(0.00))
+                            .waitSeconds(2)
+
+                            .splineToConstantHeading(new Vector2d(36.84, -58.82), Math.toRadians(0.00))
+                            .waitSeconds(2)
+
+                            .lineTo(new Vector2d(62.19, -60.72))
+                            .waitSeconds(2)
 
 
-                            .lineToConstantHeading(new Vector2d(39.19, 58.67))
-                            .addTemporalMarker(() -> ascending.setTargetPosition(-10))
-                            .addTemporalMarker(() -> ascending.setPower(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
-
-                            .lineTo(new Vector2d(62.33, 58.67))*/
 
 
 

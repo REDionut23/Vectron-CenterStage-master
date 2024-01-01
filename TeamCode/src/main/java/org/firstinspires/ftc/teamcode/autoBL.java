@@ -18,6 +18,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityC
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.CS_Blue1_Pipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.OutTake;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -34,8 +35,16 @@ import java.util.Arrays;
 public class autoBL extends LinearOpMode
 {
 
+    //====================
+    //armPID
 
 
+
+    //armPID
+    //====================
+
+
+OutTake outTake;
     public static void sleep(int ms)
     {
         try
@@ -66,7 +75,8 @@ public class autoBL extends LinearOpMode
     DcMotor rightRear;
     DcMotor ascending;
     DcMotor descending;
-    DcMotor  brat;
+
+
 
 
 
@@ -105,8 +115,17 @@ public class autoBL extends LinearOpMode
      * This function is executed when this OpMode is selected & Init is pressed
      */
     @Override
-    public void runOpMode()
+    public void runOpMode() throws InterruptedException
+
     {
+
+
+
+//====================
+
+
+
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         stangaIntake = hardwareMap.get(Servo.class, "stangaIntake");
@@ -117,14 +136,20 @@ public class autoBL extends LinearOpMode
 
 
 
-        brat = hardwareMap.get(DcMotorEx.class,"brat");
-        brat.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
+
+
+        //brat = hardwareMap.get(DcMotorEx.class,"brat");
+        // brat.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        /*
         brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         brat.setTargetPosition(0);
         brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        */
 
         ascending = hardwareMap.get(DcMotorEx.class,"ascending");
         ascending.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -195,6 +220,13 @@ public class autoBL extends LinearOpMode
 
         ));
         waitForStart();
+
+
+
+
+
+
+
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
                 .addTemporalMarker(() -> dreaptaGripper.setPosition(0.55))
                 .addTemporalMarker(() -> stangaGripper.setPosition(0.12))
@@ -232,20 +264,18 @@ public class autoBL extends LinearOpMode
 
                             .waitSeconds(2)
                             .splineToLinearHeading(new Pose2d(53.54, 44.17, Math.toRadians(185.00)), Math.toRadians(0.00))
-                            .addTemporalMarker(() -> brat.setTargetPosition(350))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+                            .addTemporalMarker(() -> outTake.bratup())
                             .waitSeconds(2)
 
                             .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
                             .addTemporalMarker(() -> stangaGripper.setPosition(0))
-                            .addTemporalMarker(() -> brat.setTargetPosition(400))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+
+                            .waitSeconds(2)
 
                             .splineToConstantHeading(new Vector2d(41.97, 59.11), Math.toRadians(0.00))
                             .addTemporalMarker(() -> ascending.setTargetPosition(-10))
                             .addTemporalMarker(() -> ascending.setPower(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+
                             .waitSeconds(2)
                             .lineTo(new Vector2d(59.99, 61.75))
 
@@ -267,18 +297,18 @@ public class autoBL extends LinearOpMode
 
 
                             .addTemporalMarker(() -> servoBrat.setPosition(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(350))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+                            .addTemporalMarker(() -> outTake.bratup())
                             .addTemporalMarker(() -> ascending.setTargetPosition(1000))
                             .addTemporalMarker(() -> ascending.setPower(1))
+                            .waitSeconds(2)
 
                             .lineToSplineHeading(new Pose2d(54.57, 35.82, Math.toRadians(180.00)))
 
 
                             .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
                             .addTemporalMarker(() -> stangaGripper.setPosition(0))
-                            .addTemporalMarker(() -> brat.setTargetPosition(400))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+
+                            .waitSeconds(2)
 
 
 
@@ -287,8 +317,7 @@ public class autoBL extends LinearOpMode
 
                             .addTemporalMarker(() -> ascending.setTargetPosition(-10))
                             .addTemporalMarker(() -> ascending.setPower(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+
                             .waitSeconds(2)
 
                             .lineTo(new Vector2d(60.13, 59.40))
@@ -320,8 +349,7 @@ public class autoBL extends LinearOpMode
                             .addTemporalMarker(() -> stangaIntake.setPosition(0)) // Lower servo
                             .waitSeconds(2)
                             .addTemporalMarker(() -> servoBrat.setPosition(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(350))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+                            .addTemporalMarker(() -> outTake.bratup())
                             .addTemporalMarker(() -> ascending.setTargetPosition(1000))
                             .addTemporalMarker(() -> ascending.setPower(1))
                             .waitSeconds(2)
@@ -330,15 +358,14 @@ public class autoBL extends LinearOpMode
 
                             .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
                             .addTemporalMarker(() -> stangaGripper.setPosition(0))
-                            .addTemporalMarker(() -> brat.setTargetPosition(400))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
 
+                            .waitSeconds(2)
 
                             .lineToConstantHeading(new Vector2d(39.19, 58.67))
                             .addTemporalMarker(() -> ascending.setTargetPosition(-10))
                             .addTemporalMarker(() -> ascending.setPower(1))
-                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
-                            .addTemporalMarker(() -> brat.setPower(0.5))
+
+                            .waitSeconds(2)
 
                             .lineTo(new Vector2d(62.33, 58.67))
 
