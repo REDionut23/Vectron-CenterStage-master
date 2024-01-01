@@ -26,11 +26,15 @@ import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 public class TeleOp extends OpMode {
     Robot robot;
-    public enum StatusBrat{
-        BRAT_SUS,
-        BRAT_JOS};
 
-    public  enum Statusintake {
+    public enum StatusBrat {
+        BRAT_SUS,
+        BRAT_JOS
+    }
+
+    ;
+
+    public enum Statusintake {
     }
 
     TeleOp.StatusBrat PozitieBrat = TeleOp.StatusBrat.BRAT_SUS;
@@ -38,12 +42,6 @@ public class TeleOp extends OpMode {
     ElapsedTime time;
 
     MultipleTelemetry tele;
-
-
-
-
-
-
 
 
     @Override
@@ -80,7 +78,7 @@ public class TeleOp extends OpMode {
         robot.avion = hardwareMap.get(Servo.class, "avion");
         robot.unghiTureta = hardwareMap.get(Servo.class, "unghiTureta");
         robot.servoBrat = hardwareMap.get(Servo.class, "servoBrat");
-        robot.brat = hardwareMap.get(DcMotorEx.class,"brat");
+        robot.brat = hardwareMap.get(DcMotorEx.class, "brat");
 
 
         robot.brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -112,13 +110,12 @@ public class TeleOp extends OpMode {
         robot.intake.setPower(0);
 
     }
+
     @Override
     public void loop() {
 
         robot.intake.setPower(0);
         robot.servoBrat.setPosition(1);
-
-
 
 
         //DT
@@ -129,19 +126,15 @@ public class TeleOp extends OpMode {
 
 
         double denominator = JavaUtil.maxOfList(JavaUtil.createListWith(1, Math.abs(forward) + Math.abs(strafe) + Math.abs(turn)));
-        robot.leftFront.setPower((forward + strafe + turn) / denominator*2); //Math.min(1,(forward+ strafe + turn) / denominator *1.22))
-        robot.leftRear.setPower((forward - (strafe - turn)) / denominator*2);
-        robot.rightFront.setPower((forward - (strafe + turn)) / denominator*2);
-        robot.rightRear.setPower((forward + (strafe - turn)) / denominator*2);
-
-
-
+        robot.leftFront.setPower((forward + strafe + turn) / denominator * 2); //Math.min(1,(forward+ strafe + turn) / denominator *1.22))
+        robot.leftRear.setPower((forward - (strafe - turn)) / denominator * 2);
+        robot.rightFront.setPower((forward - (strafe + turn)) / denominator * 2);
+        robot.rightRear.setPower((forward + (strafe - turn)) / denominator * 2);
 
 
         //INTAKE
 
-        if (gamepad1.right_trigger > .5)
-        {
+        if (gamepad1.right_trigger > .5) {
 
             robot.stangaIntake.setPosition(0.44);
             robot.dreaptaIntake.setPosition(0.56);
@@ -149,25 +142,18 @@ public class TeleOp extends OpMode {
         }
 
 
-
-
-        if (gamepad1.left_trigger > .5)
-        {
+        if (gamepad1.left_trigger > .5) {
             robot.stangaIntake.setPosition(0.45);
             robot.dreaptaIntake.setPosition(0.55);
             robot.intake.setPower(1);
         }
 
 
-
-        if (gamepad1.a)
-        {
+        if (gamepad1.a) {
             robot.stangaIntake.setPosition(0);
             robot.dreaptaIntake.setPosition(1);
 
         }
-
-
 
 
         //BRAT
@@ -176,8 +162,7 @@ public class TeleOp extends OpMode {
 
             case BRAT_SUS:
 
-                if (gamepad2.left_bumper)
-                {
+                if (gamepad2.left_bumper) {
                     robot.stangaGripper.setPosition(0);
                     robot.dreaptaGripper.setPosition(0.8);
                     robot.servoBrat.setPosition(0);
@@ -201,7 +186,7 @@ public class TeleOp extends OpMode {
                     robot.servoBrat.setPosition(1);
                     robot.sleep(400);
 //coboara brat
-                    robot.brat.setTargetPosition( 30);
+                    robot.brat.setTargetPosition(30);
                     robot.brat.setPower(.5);
                     robot.sleep(500);
                     robot.servoBrat.setPosition(.2);
@@ -227,8 +212,7 @@ public class TeleOp extends OpMode {
 
             case BRAT_JOS:
 
-                if (gamepad2.right_bumper)
-                {
+                if (gamepad2.right_bumper) {
                     robot.stangaGripper.setPosition(0);
                     robot.dreaptaGripper.setPosition(0.8);
                     robot.servoBrat.setPosition(1); // aici tu stii cum ai pozitiile eu pun 0 si 1
@@ -248,17 +232,14 @@ public class TeleOp extends OpMode {
         }
 
 
-
-        if (gamepad2.dpad_right)
-        {
+        if (gamepad2.dpad_right) {
             robot.stangaGripper.setPosition(0);
             robot.dreaptaGripper.setPosition(0.8);
         }
 
         //AVION
 
-        if (gamepad2.x)
-        {
+        if (gamepad2.x) {
             robot.tureta.setPosition(0);
             robot.unghiTureta.setPosition(.5);
         }
@@ -266,8 +247,7 @@ public class TeleOp extends OpMode {
 
         //LIFT
 
-        if (gamepad2.dpad_up)
-        {
+        if (gamepad2.dpad_up) {
             robot.ascending.setPower(1);
             robot.descending.setPower(-0.6);
             robot.sleep(2000);
@@ -278,8 +258,7 @@ public class TeleOp extends OpMode {
             robot.descending.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
-        if (gamepad2.dpad_down)
-        {
+        if (gamepad2.dpad_down) {
             robot.ascending.setPower(-1);
             robot.descending.setPower(.6);
             robot.sleep(2000);
@@ -288,9 +267,8 @@ public class TeleOp extends OpMode {
 
 
             robot.ascending.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            robot.descending.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);}
-
-
+            robot.descending.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
 
 
     }

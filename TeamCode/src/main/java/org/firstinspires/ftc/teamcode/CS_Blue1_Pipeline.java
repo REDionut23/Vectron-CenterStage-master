@@ -9,44 +9,46 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-
-
+import org.opencv.imgproc.Imgproc;
 import java.lang.Math;
 
 
-public class CS1_Pipeline extends OpenCvPipeline {
+public class CS_Blue1_Pipeline extends OpenCvPipeline {
     public enum Location {
         LEFT,
         CENTER,
         RIGHT
     }
-    private Location location;
+    public static Location location;
+    boolean enableDetection = true;
 
     Telemetry telemetry;
 
     static final Rect LEFT_ROI = new Rect(
-            new Point(15, 150),
-            new Point(35, 170));
+            new Point(50, 560),
+            new Point(100, 610));
 
     static final Rect CENTER_ROI = new Rect(
-            new Point(110, 140),
-            new Point(130, 160));
+            new Point(480, 530),
+            new Point(530, 580));
 
     static double PERCENT_COLOR_THRESHOLD = 0.1;
 
-    public CS1_Pipeline(Telemetry telemetry)
+    public CS_Blue1_Pipeline(Telemetry telemetry)
     { this.telemetry = telemetry; }
 
 
     @Override
     public Mat processFrame(Mat input) {
         //Imgproc.cvtColor(input, input, Imgproc.COLOR_RGBA2GRAY);
+        if(!enableDetection)
+            return input;
 
         Mat left = input.submat(LEFT_ROI);
         Mat center = input.submat(CENTER_ROI);
 
-        double leftValue = Core.sumElems(left).val[1] / LEFT_ROI.area() / 255;
-        double centerValue = Core.sumElems(center).val[1] / CENTER_ROI.area() / 255;
+        double leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;
+        double centerValue = Core.sumElems(center).val[0] / CENTER_ROI.area() / 255;
         double delta = leftValue - centerValue;
 
         left.release();
@@ -76,7 +78,7 @@ public class CS1_Pipeline extends OpenCvPipeline {
             posLeft = true;
         }
 
-        if(delta > 0.2)
+        if(delta > 0.3)
         {
             posCenter = true;
         }

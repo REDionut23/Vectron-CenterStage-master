@@ -1,67 +1,50 @@
 package org.firstinspires.ftc.teamcode;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PController;
-import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import  com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
-public class pidbrat{
+@TeleOp
+public class pidbrat extends OpMode {
+    private PIDController controller;
 
-    Robot robot;
-    static DcMotorEx brat;
+    public static double p = 0.1, i =0, d =0.00001;
+    public static double f = 0.2;
 
-    public static double kP = 0.01;
-    public static double kI = 0;
-    public static double kD = 0.0001;
-    public static double kF = 0.0001;
-    public static int bratTargetPos = 0;
-    private final double ticks_in_degree = 192.25/180.0;
-    public static PIDController pid;
-    // Creates a PIDFController with gains kP, kI, kD, and kF
-    public void init(DcMotorEx slide1, DcMotorEx slide2) {
-        brat= brat;
+    public static int target =0;
+    private final double ticks_in_degree = 1.493;
 
-        pid = new PIDController(kP, kI, kD);
-        //leftSlide = (DcMotorEx) hardwareMap.dcMotor.get("LeftSlide");
-        //rightSlide = (DcMotorEx) hardwareMap.dcMotor.get("RightSlide");
-
-        brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        brat.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-      brat.setDirection(DcMotorSimple.Direction.REVERSE);
-        //liftTargetPos = 0;
-    }
-    public void loop(){
-        pid.setPID(kP,kI,kD);
-        double pidPower = pid.calculate(brat.getCurrentPosition(), bratTargetPos);
-        double ffPower = kF * brat.getCurrentPosition();
-        brat.setPower(ffPower + pidPower);
-
-
+    public DcMotor brat;
+    @Override
+    public void init() {
+        controller = new PIDController(p, i, d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance(). getTelemetry());
+        brat = hardwareMap.get(DcMotor.class, "brat");
+        brat.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
-    public void changeHeight(int pos){
-        bratTargetPos = pos;
-    }
-    public void reset(){
-        brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        brat .setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    @Override
+    public void loop() {
+controller.setPID(p, i, d);
+int armPos =brat.getCurrentPosition();
+double pid = controller.calculate(armPos, target);
+double ff = Math.cos(Math.toRadians(target/ticks_in_degree)) *f;
 
-        bratTargetPos=0;
+
+double power = pid +ff;
+brat.setTargetPosition(50);
+brat.setPower(power);
+telemetry.addData("pos ", armPos);
+telemetry.addData("target ", target );
+telemetry.update();
+
     }
 }
