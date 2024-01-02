@@ -35,16 +35,8 @@ import java.util.Arrays;
 public class autoBL extends LinearOpMode
 {
 
-    //====================
-    //armPID
 
 
-
-    //armPID
-    //====================
-
-
-OutTake outTake;
     public static void sleep(int ms)
     {
         try
@@ -77,7 +69,7 @@ OutTake outTake;
     DcMotor descending;
 
 
-
+DcMotor brat;
 
 
 
@@ -129,7 +121,7 @@ OutTake outTake;
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         stangaIntake = hardwareMap.get(Servo.class, "stangaIntake");
-       dreaptaIntake = hardwareMap.get(Servo.class, "dreaptaIntake");
+        dreaptaIntake = hardwareMap.get(Servo.class, "dreaptaIntake");
         stangaGripper = hardwareMap.get(Servo.class, "stangaGripper");
         dreaptaGripper = hardwareMap.get(Servo.class, "dreaptaGripper");
         servoBrat = hardwareMap.get(Servo.class, "servoBrat");
@@ -139,17 +131,16 @@ OutTake outTake;
 
 
 
+        brat = hardwareMap.get(DcMotorEx.class,"brat");
+         brat.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //brat = hardwareMap.get(DcMotorEx.class,"brat");
-        // brat.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        /*
         brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         brat.setTargetPosition(0);
         brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        */
+
 
         ascending = hardwareMap.get(DcMotorEx.class,"ascending");
         ascending.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -159,11 +150,11 @@ OutTake outTake;
         ascending.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         ;        /************************************************************************
-         * INIT CODE:
-         *   -map hardware specific to our robot
-         *   -config hardware settings (like reversed motor directions)
-         *   -config camera & OpenCV pipeline used for prop location detection  ---------------------------------- Set motor variables
-         ************************************************************************/
+     * INIT CODE:
+     *   -map hardware specific to our robot
+     *   -config hardware settings (like reversed motor directions)
+     *   -config camera & OpenCV pipeline used for prop location detection  ---------------------------------- Set motor variables
+     ************************************************************************/
 
 
 
@@ -264,18 +255,21 @@ OutTake outTake;
 
                             .waitSeconds(2)
                             .splineToLinearHeading(new Pose2d(53.54, 44.17, Math.toRadians(185.00)), Math.toRadians(0.00))
-                            .addTemporalMarker(() -> outTake.bratup())
+                            .addTemporalMarker(() -> brat.setTargetPosition(350))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .waitSeconds(2)
 
                             .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
                             .addTemporalMarker(() -> stangaGripper.setPosition(0))
-
+                            .addTemporalMarker(() -> brat.setTargetPosition(450))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .waitSeconds(2)
 
                             .splineToConstantHeading(new Vector2d(41.97, 59.11), Math.toRadians(0.00))
                             .addTemporalMarker(() -> ascending.setTargetPosition(-10))
                             .addTemporalMarker(() -> ascending.setPower(1))
-
+                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .waitSeconds(2)
                             .lineTo(new Vector2d(59.99, 61.75))
 
@@ -297,7 +291,8 @@ OutTake outTake;
 
 
                             .addTemporalMarker(() -> servoBrat.setPosition(1))
-                            .addTemporalMarker(() -> outTake.bratup())
+                            .addTemporalMarker(() -> brat.setTargetPosition(350))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .addTemporalMarker(() -> ascending.setTargetPosition(1000))
                             .addTemporalMarker(() -> ascending.setPower(1))
                             .waitSeconds(2)
@@ -307,7 +302,8 @@ OutTake outTake;
 
                             .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
                             .addTemporalMarker(() -> stangaGripper.setPosition(0))
-
+                            .addTemporalMarker(() -> brat.setTargetPosition(450))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .waitSeconds(2)
 
 
@@ -317,7 +313,8 @@ OutTake outTake;
 
                             .addTemporalMarker(() -> ascending.setTargetPosition(-10))
                             .addTemporalMarker(() -> ascending.setPower(1))
-
+                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .waitSeconds(2)
 
                             .lineTo(new Vector2d(60.13, 59.40))
@@ -344,30 +341,47 @@ OutTake outTake;
                     break;
                 case RIGHT:
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(trajSeq.end())
-                            .splineToSplineHeading(new Pose2d(6, 30.54, Math.toRadians(180.00)), Math.toRadians(246.50))
+                            .splineTo(new Vector2d(9.01, 29.96), Math.toRadians(180.00))
+
+
+
                             .addTemporalMarker(() -> dreaptaIntake.setPosition(1)) // Lower servo
                             .addTemporalMarker(() -> stangaIntake.setPosition(0)) // Lower servo
                             .waitSeconds(2)
+                            .lineTo(new Vector2d(16.77, 30.40))
                             .addTemporalMarker(() -> servoBrat.setPosition(1))
-                            .addTemporalMarker(() -> outTake.bratup())
+
+                            .addTemporalMarker(() ->stangaIntake.setPosition(0.44))
+                    .addTemporalMarker(() -> dreaptaIntake.setPosition(0.56))
+                            .waitSeconds(2)
+                            .addTemporalMarker(() -> brat.setTargetPosition(350))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .addTemporalMarker(() -> ascending.setTargetPosition(1000))
                             .addTemporalMarker(() -> ascending.setPower(1))
                             .waitSeconds(2)
 
-                            .lineToConstantHeading(new Vector2d(55.74, 29.22))
+
+                            .lineTo(new Vector2d(55.59, 29.81))
+
 
                             .addTemporalMarker(() -> dreaptaGripper.setPosition(0.8))
                             .addTemporalMarker(() -> stangaGripper.setPosition(0))
-
+                            .addTemporalMarker(() -> brat.setTargetPosition(400))
+                            .addTemporalMarker(() -> brat.setTargetPosition(350))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .waitSeconds(2)
 
-                            .lineToConstantHeading(new Vector2d(39.19, 58.67))
+                            .splineToConstantHeading(new Vector2d(34.35, 63.21), Math.toRadians(190.00))
+
                             .addTemporalMarker(() -> ascending.setTargetPosition(-10))
                             .addTemporalMarker(() -> ascending.setPower(1))
-
+                            .waitSeconds(2)
+                            .addTemporalMarker(() -> brat.setTargetPosition(-10))
+                            .addTemporalMarker(() -> brat.setPower(.5))
                             .waitSeconds(2)
 
-                            .lineTo(new Vector2d(62.33, 58.67))
+                            .lineTo(new Vector2d(61.75, 63.65))
+
 
 
 
@@ -385,26 +399,25 @@ OutTake outTake;
             }
 // Put loop blocks here.
 
-                // do some telemetry
-                telemetry.addData("PROP LOCATION: ", findPropPL.location);
-
-                telemetry.update();
-
-                // don't do this in a real op mode, but for this cam test, chill on the CPU cycles
-            }
-
-
-
-
-            // Put loop blocks here.
-
             // do some telemetry
             telemetry.addData("PROP LOCATION: ", findPropPL.location);
 
             telemetry.update();
 
             // don't do this in a real op mode, but for this cam test, chill on the CPU cycles
-
         }
-    }
 
+
+
+
+        // Put loop blocks here.
+
+        // do some telemetry
+        telemetry.addData("PROP LOCATION: ", findPropPL.location);
+
+        telemetry.update();
+
+        // don't do this in a real op mode, but for this cam test, chill on the CPU cycles
+
+    }
+}
